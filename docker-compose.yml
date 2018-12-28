@@ -1,0 +1,36 @@
+version: "3.2"
+services:
+  php-apache:
+    build: bin/php-apache/
+    restart: always
+    volumes:
+      - www:/var/www/html
+      - ${PHP_INI}:/usr/local/etc/php/php.ini
+      - ${APACHE_VHOSTS_DIR}:/etc/apache2/sites-enabled
+      - ${APACHE_LOG_DIR}:/var/log/apache2
+      - ${XDEBUG_LOG_DIR}:/var/log/xdebug
+    ports:
+      - "${HTTP_PORT}:80"
+    environment:
+      XDEBUG_CONFIG: "remote_port=${XDEBUG_REMOTE_PORT} idekey=${XDEBUG_IDE_KEY}"
+    depends_on:
+      - mariadb
+  mariadb:
+    image: mariadb:latest
+    restart: always
+    volumes:
+      - ${MYSQL_LOG_DIR}:/var/log/mysql
+      - /var/lib/mysql
+    ports:
+      - "${MYSQL_PORT}:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+volumes:
+  www:
+    driver_opts:
+      type: none
+      device: ${FULL_ROOT_DIR}/www
+      o: bind
