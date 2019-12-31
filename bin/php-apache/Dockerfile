@@ -11,7 +11,7 @@ RUN sed -e '/<Directory \/var\/www\/>/,/<\/Directory>/s/AllowOverride None/Allow
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN apt-get update &&\
-	apt-get install --no-install-recommends -y gnupg git libzip-dev zip unzip libpng-dev supervisor libsqlite3-dev libsqlite3-0 mysql-client
+	apt-get install --no-install-recommends -y gnupg git libzip-dev zip unzip libpng-dev supervisor libsqlite3-dev libsqlite3-0 mariadb-client
 
 RUN pecl install xdebug-2.6.1 && docker-php-ext-enable xdebug
 
